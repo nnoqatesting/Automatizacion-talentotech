@@ -1,0 +1,57 @@
+# Importa la herramienta principal de Selenium para controlar el navegador web (en este caso, Chrome).
+from selenium import webdriver
+
+# Importa la estrategia 'By', que permite especificar cómo buscar un elemento en el HTML (por ID, CLASS_NAME, XPATH, etc.).
+from selenium.webdriver.common.by import By
+
+# Importa el módulo nativo de Python 'time' para pausar la ejecución del código durante ciertos intervalos de segundos.
+import time
+
+
+def test_login_exitoso():
+    # Inicializa e abre una nueva instancia del navegador Google Chrome.
+    driver = webdriver.Chrome()
+
+    # Navega a la URL especificada en el navegador abierto.
+    driver.get("https://www.saucedemo.com/")
+
+    # Busca el campo de texto con el ID 'user-name' y escribe ('send_keys') el texto 'standard_user'.
+    # Nota: send_keys() devuelve None, por lo que la variable 'usuario' guardará None.
+    usuario = driver.find_element(By.ID, "user-name").send_keys("standard_user")
+
+    # Pausa la ejecución del programa durante 1 segundo para observar la acción.
+    time.sleep(1)
+
+    # Busca el campo de contraseña con el ID 'password' y escribe ('send_keys') la clave 'secret_sauce'.
+    password = driver.find_element(By.ID, "password").send_keys("secret_sauce")
+
+    # Pausa la ejecución del programa durante 1 segundo.
+    time.sleep(1)
+
+    # Busca el botón con el ID 'login-button' y simula un clic con el ratón.
+    boton_login = driver.find_element(By.ID, "login-button").click()
+
+    # Pausa la ejecución del programa durante 1 segundo.
+    time.sleep(1)
+
+    # Localiza el elemento que contiene el título del sitio web buscando por su clase CSS 'app_logo'
+    # y lo almacena en la variable 'titulo' como un objeto WebElement.
+    titulo = driver.find_element(By.CLASS_NAME, "app_logo")
+
+    # Detiene la ejecución en la consola hasta que el usuario presione la tecla 'Enter'.
+    # Esto evita que el navegador se cierre automáticamente antes de inspeccionarlo.
+    input("Ingresa cualquier tecla para cerrar")
+
+    # Verifica que la URL actual coincida exactamente con la URL esperada después del inicio de sesión.
+    # Si no coinciden, la prueba falla y lanza un AssertionError.
+    assert driver.current_url == "https://www.saucedemo.com/inventory.html"
+
+    # Verifica que el texto visible dentro del elemento 'titulo' sea exactamente "Swag Labs".
+    # Si no coincide, la prueba falla.
+    assert titulo.text == "Swag Labs"
+
+    # Pausa final de 2 segundos.
+    time.sleep(2)
+
+    # Cierra todas las ventanas del navegador abiertas por Selenium y finaliza el proceso del controlador (driver).
+    driver.quit()
